@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { IoChatbubbleEllipses } from 'react-icons/io5'
 import { FaUserPlus } from 'react-icons/fa'
@@ -8,9 +8,11 @@ import Avatar from './Avatar'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../redux/userSlice'
 import axios from 'axios'
+import EditUserDetails from './EditUserDetails'
 
 const Sidebar = () => {
   const user = useSelector(state=>state?.user)
+  const [editUserOpen, setEditUserOpen] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -36,7 +38,7 @@ const Sidebar = () => {
                 </div>
             </div>
             <div className='flex flex-col items-center'>
-                <button className='mx-auto'>
+                <button className='mx-auto' onClick={()=>setEditUserOpen(true)}>
                     <Avatar
                         userId={user?._id}
                         name={user?.name}
@@ -68,6 +70,16 @@ const Sidebar = () => {
                 </div>
             </div>
         </div>
+
+        {/* 사용자수정 레이어팝업 */}
+        {
+            editUserOpen && (
+                <EditUserDetails
+                    onClose={()=>setEditUserOpen(false)}
+                    user={user}
+                />
+            )
+        }
     </div>
   )
 }
