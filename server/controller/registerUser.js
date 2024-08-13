@@ -3,10 +3,10 @@ const bcryptjs = require('bcryptjs')
 
 async function registerUser(req,res){
     const {name,email,password,profile_pic} = req.body
-    console.log(`email:${email}`)
+    // console.log(`email:${email}`)
 
     const checkEmail = await UserModel.findOne({email})
-    console.log(`checkEmail:${checkEmail}`)
+    // console.log(`checkEmail:${checkEmail}`)
     
     if (checkEmail){
         return res.status(400).json({
