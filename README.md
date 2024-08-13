@@ -104,3 +104,14 @@
 1. 채팅창 Header 만들고
 ------------------------------------------------
 1. A.I 랭체인(계속)
+
+# 8월13일(화) 수업내용
+1. 소켓통신 시작(환경구성)
+1. /server
+  npm install socket.io
+  /socket/index.js
+1. /client
+  npm install socket.io-client
+  /src/pages/Home.js
+
+

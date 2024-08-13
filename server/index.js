@@ -4,10 +4,9 @@ const router = require('./router/index.js')
 require('dotenv').config({ path: '.env' })
 const connectDB = require('./config/connectDB.js')
 const cookiesParser = require('cookie-parser')
+const { app, server } = require('./socket/index.js')
 
-const app = express()
-
-console.log(`URL:${process.env.FRONTEND_URL}`)
+// const app = express()
 
 // middleware
 app.use(cors({ //cors설정은 맨위에 존재해야함
@@ -27,7 +26,7 @@ connectDB().then(()=>{
     console.log(`와우 내가만든 몽공DB랑 연결 성공했어요.`)   
 })
 
-app.listen(8080, ()=> {
-    console.log(`웹서버가 실행되었습니다.`)
+server.listen(8080, ()=> {
+    console.log(`socket/http/express가 실행되었습니다.`)
 })
 
