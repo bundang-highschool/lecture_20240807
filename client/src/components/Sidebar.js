@@ -9,10 +9,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../redux/userSlice'
 import axios from 'axios'
 import EditUserDetails from './EditUserDetails'
+import SearchUser from './SearchUser'
 
 const Sidebar = () => {
   const user = useSelector(state=>state?.user)
   const [editUserOpen, setEditUserOpen] = useState(false)
+  const [openSearchUser, setOpenSearchUser] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -33,7 +35,7 @@ const Sidebar = () => {
                 <NavLink className={({isActive})=>`w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded ${isActive && "bg-slate-200"}`} title='chat'>
                     <IoChatbubbleEllipses size={20}/>
                 </NavLink>
-                <div className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded'>
+                <div className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' onClick={()=>setOpenSearchUser(true)}>
                     <FaUserPlus size={20}/>
                 </div>
             </div>

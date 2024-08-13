@@ -25,10 +25,10 @@ const SearchUser = ({onClose})=>{
     },[search])
 
     return (
-        <div>
-            <div>
+        <div className='fixed top-0 bottom-0 left-0 right-0 bg-slate-700 bg-opacity-40 p-2 z-10'>
+            <div className='w-full max-w-lg mx-auto mt-10'>
                 {/* 검색어 입력 */}
-                <div>
+                <div className='bg-white rounded h-14 overflow-hidden flex'>
                     <input
                         type='text'
                         placeholder='검색할 성명 및 이메일을 입력하세요'
@@ -36,16 +36,35 @@ const SearchUser = ({onClose})=>{
                         onChange={(e)=>setSearch(e.target.value)}
                         value={search}
                     />
-                    <div>
+                    <div className='h-14 w-14 flex justify-center items-center'>
                         <IoSearchOutline size={25}/>
                     </div>
                 </div>
 
                 {/* 검색 결과 표시 */}
-                <div>
+                <div className='bg-white mt-2 w-full p-4 rounded h-[calc(100vh-160px)] overflow-x-hidden overflow-y-auto scrollbar'>
+                    {
+                        searchUser.length === 0 && (
+                            <p className='text-center text-slate-500'>검색어에 해당하는 사람이 없습니다.</p>
+                        )
+                    }
+                    {
+                        searchUser.length !==0 && (
+                            searchUser.map((user,index)=>{
+                                return (
+                                    <UserSearchCard key={user._id} user={user} onClose={onClose}/>
+                                )
+                            })
+                        )
+                    }
                 </div>
+            </div>
 
-                {/* 닫기버튼 */}
+            {/* 닫기버튼 */}
+            <div className='absolute top-0 right-0 text-2xl p-2 lg:text-4xl hover:text-white' onClick={onClose}>
+                <button>
+                    <IoClose/>
+                </button>
             </div>
         </div>
     )
