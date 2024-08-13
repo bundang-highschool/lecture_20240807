@@ -1,11 +1,35 @@
-import React from "react";
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import {useSelector} from 'react-redux'
+import { Link, useParams } from 'react-router-dom'
 import { IoMdSend } from 'react-icons/io'
 import { FaAngleLeft, FaPlus } from 'react-icons/fa6'
 import backgroundImage from '../assets/wallapaper.jpeg'
 import Avatar from "./Avatar";
 
 const MessagePage = () => {
+    const params = useParams()
+    const socketConnection =  useSelector(state=>state?.user?.socketConnection)
+    const user = useSelector(state=>state?.user)
+    const [dataUser,setDataUser] = useState({
+        name: "",
+        email: "",
+        profile_pic: "",
+        online: false,
+        _id: ""
+    })
+
+    /**
+     * 소켓통신하기
+     */
+    useEffect(()=>{
+        if (socketConnection){
+            socketConnection.emit('message-page', params.userId)
+            socketConnection.on('message-user',(data)=>{
+                setDataUser(data) //상대방 1명 정보
+            })
+        }
+    },[socketConnection, params?.userId, user])
+
     return(
         <div style={{ backgroundImage : `url(${backgroundImage})`}} className='bg-no-repeat bg-cover'>
             <header className='sticky top-0 h-16 bg-white flex justify-between items-center px-4'>
@@ -15,9 +39,9 @@ const MessagePage = () => {
                     </Link>
                     <div>
                         <Avatar
-                            userId=''
-                            name='신달수'
-                            imageUrl=''
+                            userId={dataUser?._id}
+                            name={dataUser?.name}
+                            imageUrl={dataUser?.profile_pic}
                             width={50}
                             height={50}
                         />
