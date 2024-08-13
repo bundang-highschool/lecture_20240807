@@ -86,7 +86,7 @@ const Sidebar = () => {
         {/* 친구목록 불러오기 */}
         {
             openSearchUser && (
-                <SearchUser onClick={()=>setOpenSearchUser(false)}/>
+                <SearchUser onClose={()=>setOpenSearchUser(false)}/>
             )
         }
     </div>

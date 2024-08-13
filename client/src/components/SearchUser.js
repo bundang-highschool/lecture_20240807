@@ -4,17 +4,21 @@ import UserSearchCard from './UserSearchCard'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { IoClose } from 'react-icons/io5'
+import Loading from './Loading'
 
 const SearchUser = ({onClose})=>{
     const [search,setSearch] = useState("") //검색어 기억
+    const [loading,setLoading] = useState(false) //로딩..
     const [searchUser,setSearchUser] = useState([]) //검색결과
     
     const handleSearchUser = async() => {
         const URL = `${process.env.REACT_APP_BACKEND_URL}/api/search-user`
         try{
+            setLoading(true) //로딩화면을 화면에 뿌려주라...
             const response = await axios.post(URL,{
                 search: search
             })
+            setLoading(false) //로딩화면 꺼
             setSearchUser(response.data.data)
         }catch(error){
             toast.error(error?.response?.data?.message)
@@ -44,12 +48,17 @@ const SearchUser = ({onClose})=>{
                 {/* 검색 결과 표시 */}
                 <div className='bg-white mt-2 w-full p-4 rounded h-[calc(100vh-160px)] overflow-x-hidden overflow-y-auto scrollbar'>
                     {
-                        searchUser.length === 0 && (
+                        searchUser.length === 0 && !loading && (
                             <p className='text-center text-slate-500'>검색어에 해당하는 사람이 없습니다.</p>
                         )
                     }
                     {
-                        searchUser.length !==0 && (
+                        loading && (
+                            <p><Loading/></p>
+                        )
+                    }
+                    {
+                        searchUser.length !==0 && !loading && (
                             searchUser.map((user,index)=>{
                                 return (
                                     <UserSearchCard key={user._id} user={user} onClose={onClose}/>
