@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {useSelector} from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { IoMdSend } from 'react-icons/io'
-import { FaAngleLeft, FaPlus, FaImage } from 'react-icons/fa6'
+import { FaAngleLeft, FaPlus, FaImage, FaVideo } from 'react-icons/fa6'
 import backgroundImage from '../assets/wallapaper.jpeg'
 import Avatar from "./Avatar";
 import uploadFile from '../helpers/uploadFile'
@@ -93,12 +93,25 @@ const MessagePage = () => {
                                     </div>
                                     <p>Image</p>
                                 </label>
+                                <label htmlFor='uploadVideo' className='flex items-center p-2 px-3 gap-3 hover:bg-slate-200 cursor-pointer'>
+                                    <div className='text-primary'>
+                                        <FaVideo size={18}/>
+                                    </div>
+                                    <p>Video</p>
+                                </label>                                
                                 <input
                                     type='file'
                                     id='uploadImage'
                                     className='hidden'
                                     onChange={(e)=>handleUploadFile('imageUrl',e)}
                                 />
+                                <input
+                                    type='file'
+                                    id='uploadVideo'
+                                    className='hidden'
+                                    onChange={(e)=>handleUploadFile('videoUrl',e)}
+                                />
+
                             </form>
                         </div>
                     )
