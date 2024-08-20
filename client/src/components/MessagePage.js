@@ -3,6 +3,7 @@ import {useSelector} from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { IoMdSend } from 'react-icons/io'
 import { FaAngleLeft, FaPlus, FaImage, FaVideo } from 'react-icons/fa6'
+import { IoClose } from 'react-icons/io5'
 import backgroundImage from '../assets/wallapaper.jpeg'
 import Avatar from "./Avatar";
 import uploadFile from '../helpers/uploadFile'
@@ -41,6 +42,17 @@ const MessagePage = () => {
         const file = e.target.files[0]
         const response = await uploadFile(file)
         setOpenFileUpload(false)
+        handleMessageChange(key,response.url)
+    }
+    const handleMessageChange = (key, value) => {
+        setMessage(preve=>{
+            return {
+                ...preve,
+                imageUrl: key==='imageUrl' ? value : preve.imageUrl,
+                videoUrl: key==='videoUrl' ? value : preve.videoUrl,
+                text: key==='text' ? value : preve.text
+            }
+        })
     }
 
     return(
@@ -74,6 +86,24 @@ const MessagePage = () => {
                         <p className='text-xs ml-auto w-fit'>12:55</p>
                     </div>
                 </div>
+
+                {/* 업로드하는 이미지 미리보기 */}
+                {
+                    message.imageUrl && (
+                        <div className='w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
+                            <div onClick={()=>handleMessageChange('imageUrl','')} className='w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600'>
+                                <IoClose size={30}/>
+                            </div>
+                            <div className='bg-white p-6'>
+                                <img 
+                                    src={message.imageUrl}
+                                    className='aspect-square w-full h-full max-w-sm object-scale-down'
+                                />
+                            </div>
+                        </div>
+                    )
+                }
+                
             </section>
 
             {/* 메세지 보내기 */}
