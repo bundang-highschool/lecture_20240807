@@ -7,6 +7,7 @@ import { IoClose } from 'react-icons/io5'
 import backgroundImage from '../assets/wallapaper.jpeg'
 import Avatar from "./Avatar";
 import uploadFile from '../helpers/uploadFile'
+import Loading from './Loading'
 
 const MessagePage = () => {
     const params = useParams()
@@ -25,7 +26,8 @@ const MessagePage = () => {
         imageUrl: "", // 보낼 사진
         videoUrl: "" // 보낼 동영상 파일
     })
-
+    const [loading, setLoading] = useState(false)
+    
     /**
      * 소켓통신하기
      */
@@ -38,10 +40,16 @@ const MessagePage = () => {
         }
     },[socketConnection, params?.userId, user])
 
+    /**
+     * 핸들 처리
+     */
     const handleUploadFile = async(key,e) => {
         const file = e.target.files[0]
+        setLoading(true)
         const response = await uploadFile(file)
+        setLoading(false)
         setOpenFileUpload(false)
+        console.log('response.url',response.url)
         handleMessageChange(key,response.url)
     }
     const handleMessageChange = (key, value) => {
@@ -53,6 +61,16 @@ const MessagePage = () => {
                 text: key==='text' ? value : preve.text
             }
         })
+    }
+    const handleSendMessage = (e) => {
+        e.preventDefault()
+        if (message.text || message.imageUrl || message.videoUrl){
+            console.log(`message.text:${message.text}, message.imageUrl:${message.imageUrl}, message.videoUrl:${message.videoUrl}`)
+            
+            if (socketConnection){
+
+            }
+        }
     }
 
     return(
@@ -103,7 +121,34 @@ const MessagePage = () => {
                         </div>
                     )
                 }
-                
+
+
+                {/* 업로드하는 비디오 미리보기 */}
+                {
+                    message.videoUrl && (
+                        <div className='w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
+                            <div onClick={()=>handleMessageChange('videoUrl','')} className='w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600'>
+                                <IoClose size={30}/>
+                            </div>
+                            <div className='bg-white p-6'>
+                                <video
+                                    src={message.videoUrl}
+                                    className='aspect-square w-full h-full max-w-sm object-scale-down'
+                                    controls
+                                    muted
+                                    autoPlay
+                                />
+                            </div>
+                        </div>
+                    )
+                }    
+                {
+                    loading && (
+                        <div className='w-full h-full flex sticky bottom-0 justify-center items-center'>
+                            <Loading />
+                        </div>
+                    )
+                }            
             </section>
 
             {/* 메세지 보내기 */}
@@ -146,8 +191,14 @@ const MessagePage = () => {
                         </div>
                     )
                 }
-                <form className='h-full w-full flex gap-2'>
-                    <input type='text' placeholder="메세지를 입력하세요..." className='py-1 px-4 outline-none w-full h-full'/>
+                <form className='h-full w-full flex gap-2' onSubmit={handleSendMessage}>
+                    <input 
+                        type='text' 
+                        placeholder="메세지를 입력하세요..." 
+                        className='py-1 px-4 outline-none w-full h-full'
+                        value={message.text}
+                        onChange={(e)=>handleMessageChange('text',e.target.value)}
+                    />
                     <button className='text-primary hover:text-secondary'>
                         <IoMdSend size={28}/>
                     </button>
