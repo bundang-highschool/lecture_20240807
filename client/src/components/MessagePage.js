@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import {useSelector} from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { IoMdSend } from 'react-icons/io'
-import { FaAngleLeft, FaPlus } from 'react-icons/fa6'
+import { FaAngleLeft, FaPlus, FaImage } from 'react-icons/fa6'
 import backgroundImage from '../assets/wallapaper.jpeg'
 import Avatar from "./Avatar";
+import uploadFile from '../helpers/uploadFile'
 
 const MessagePage = () => {
     const params = useParams()
@@ -16,6 +17,12 @@ const MessagePage = () => {
         profile_pic: "",
         online: false,
         _id: ""
+    })
+    const [openFileUpload, setOpenFileUpload] = useState(false)
+    const [message, setMessage] = useState({
+        text: "", // 보낼 메세지
+        imageUrl: "", // 보낼 사진
+        videoUrl: "" // 보낼 동영상 파일
     })
 
     /**
@@ -29,6 +36,12 @@ const MessagePage = () => {
             })
         }
     },[socketConnection, params?.userId, user])
+
+    const handleUploadFile = async(key,e) => {
+        const file = e.target.files[0]
+        const response = await uploadFile(file)
+        setOpenFileUpload(false)
+    }
 
     return(
         <div style={{ backgroundImage : `url(${backgroundImage})`}} className='bg-no-repeat bg-cover'>
@@ -65,11 +78,31 @@ const MessagePage = () => {
 
             {/* 메세지 보내기 */}
             <section className='h-16 bg-white flex items-center px-4'>
-                <div className="relative">
+                <div className="relative" onClick={()=>setOpenFileUpload(preve=>!preve)}>
                     <button className='flex justify-center items-center w-11 h-11 rounded-full hover:bg-primary hover:text-white'>
                         <FaPlus size={20}/>
                     </button>
                 </div>
+                {
+                    openFileUpload && (
+                        <div className='bg-white shadow rounded absolute bottom-20 w-36 p-2'>
+                            <form>
+                                <label htmlFor='uploadImage' className='flex items-center p-2 px-3 gap-3 hover:bg-slate-200 cursor-pointer'>
+                                    <div className='text-primary'>
+                                        <FaImage size={18}/>
+                                    </div>
+                                    <p>Image</p>
+                                </label>
+                                <input
+                                    type='file'
+                                    id='uploadImage'
+                                    className='hidden'
+                                    onChange={(e)=>handleUploadFile('imageUrl',e)}
+                                />
+                            </form>
+                        </div>
+                    )
+                }
                 <form className='h-full w-full flex gap-2'>
                     <input type='text' placeholder="메세지를 입력하세요..." className='py-1 px-4 outline-none w-full h-full'/>
                     <button className='text-primary hover:text-secondary'>
